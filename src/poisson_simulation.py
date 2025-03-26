@@ -72,7 +72,8 @@ if __name__ == "__main__":
     # 2&3. 进行实验模拟并比较结果
     compare_simulation_theory()
     
-    plt.show()import numpy as np
+    plt.show()
+    import numpy as np
 import matplotlib.pyplot as plt
 from scipy.special import factorial
 
