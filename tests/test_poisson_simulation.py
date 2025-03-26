@@ -84,3 +84,50 @@ class TestPoissonSimulation(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import poisson
+
+# ======================
+# 参数设置
+# ======================
+n_coins = 100      # 每组实验抛硬币次数
+p = 0.08           # 单次正面概率
+lambda_ = n_coins * p  # λ = 8
+N = 10000          # 实验组数
+
+# ======================
+# 1. 理论分布计算
+# ======================
+l_values = np.arange(0, 21)  # 取0到20个成功次数
+theory_probs = poisson.pmf(l_values, lambda_)
+
+# ======================
+# 2. 数值模拟实验
+# ======================
+# 使用二项分布模拟（更符合实际抛硬币场景）
+simulated = np.random.binomial(n=n_coins, p=p, size=N)
+
+# ======================
+# 3. 可视化对比
+# ======================
+plt.figure(figsize=(10, 6))
+
+# 绘制实验结果的直方图
+hist_bins = np.arange(-0.5, 20.5, 1)  # 对齐整数边界
+plt.hist(simulated, bins=hist_bins, density=False, alpha=0.7, 
+         label=f'{N}次实验', color='skyblue')
+
+# 绘制理论泊松分布曲线（转换为频数）
+plt.plot(l_values, theory_probs * N, 'ro--', markersize=5, 
+         linewidth=2, label='理论泊松分布')
+
+# 图表装饰
+plt.xticks(np.arange(0, 21, 2))
+plt.xlabel('正面次数', fontsize=12)
+plt.ylabel('频数', fontsize=12)
+plt.title('抛硬币实验 vs 泊松分布理论值 (λ=8)', fontsize=14)
+plt.legend()
+plt.grid(alpha=0.3)
+plt.show()
+
