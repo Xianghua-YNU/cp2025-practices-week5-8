@@ -96,38 +96,63 @@ p = 0.08           # 单次正面概率
 lambda_ = n_coins * p  # λ = 8
 N = 10000          # 实验组数
 
-# ======================
-# 1. 理论分布计算
-# ======================
-l_values = np.arange(0, 21)  # 取0到20个成功次数
-theory_probs = poisson.pmf(l_values, lambda_)
+好的，我将通过减少一些不必要的函数和代码结构来简化你提供的代码，同时保持结果的一致性。以下是简化后的代码：
+ 
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.special import factorial
 
-# ======================
-# 2. 数值模拟实验
-# ======================
-# 使用二项分布模拟（更符合实际抛硬币场景）
-simulated = np.random.binomial(n=n_coins, p=p, size=N)
+# 设置随机种子
+np.random.seed(42)
 
-# ======================
-# 3. 可视化对比
-# ======================
+# 泊松分布参数
+lambda_param = 8
+# 实验组数
+n_experiments = 10000
+# 每组抛硬币次数
+n_flips = 100
+# 正面朝上的概率
+p_head = 0.08
+
+# 1. 绘制理论分布
+l_values = np.arange(int(lambda_param * 2))
+pmf = (lambda_param ** l_values * np.exp(-lambda_param)) / factorial(l_values)
+
 plt.figure(figsize=(10, 6))
-
-# 绘制实验结果的直方图
-hist_bins = np.arange(-0.5, 20.5, 1)  # 对齐整数边界
-plt.hist(simulated, bins=hist_bins, density=False, alpha=0.7, 
-         label=f'{N}次实验', color='skyblue')
-
-# 绘制理论泊松分布曲线（转换为频数）
-plt.plot(l_values, theory_probs * N, 'ro--', markersize=5, 
-         linewidth=2, label='理论泊松分布')
-
-# 图表装饰
-plt.xticks(np.arange(0, 21, 2))
-plt.xlabel('正面次数', fontsize=12)
-plt.ylabel('频数', fontsize=12)
-plt.title('抛硬币实验 vs 泊松分布理论值 (λ=8)', fontsize=14)
+plt.plot(l_values, pmf, 'bo-', label='Theoretical Distribution')
+plt.title(f'Poisson Probability Mass Function (λ={lambda_param})')
+plt.xlabel('l')
+plt.ylabel('p(l)')
+plt.grid(True)
 plt.legend()
-plt.grid(alpha=0.3)
 plt.show()
 
+# 2. 进行实验模拟
+results = []
+for _ in range(n_experiments):
+    coins = np.random.choice([0, 1], n_flips, p=[1 - p_head, p_head])
+    results.append(coins.sum())
+results = np.array(results)
+
+# 3. 比较实验结果与理论分布
+max_l = max(int(lambda_param * 2), max(results) + 1)
+l_values = np.arange(max_l)
+pmf = (lambda_param ** l_values * np.exp(-lambda_param)) / factorial(l_values)
+
+plt.figure(figsize=(12, 7))
+plt.hist(results, bins=range(max_l + 1), density=True, alpha=0.7,
+         label='Simulation Results', color='skyblue')
+plt.plot(l_values, pmf, 'r-', label='Theoretical Distribution', linewidth=2)
+
+plt.title(f'Poisson Distribution Comparison (N={n_experiments}, λ={lambda_param})')
+plt.xlabel('Number of Heads')
+plt.ylabel('Frequency/Probability')
+plt.grid(True, alpha=0.3)
+plt.legend()
+
+# 打印统计信息
+print(f"实验均值: {np.mean(results):.2f} (理论值: {lambda_param})")
+print(f"实验方差: {np.var(results):.2f} (理论值: {lambda_param})")
+
+plt.show()
+ 
