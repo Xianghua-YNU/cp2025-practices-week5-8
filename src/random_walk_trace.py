@@ -1,64 +1,62 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
-def random_walk(steps):
+def random_walk_2d(steps):
     """
-    生成二维对角随机行走轨迹
-    :param steps: 步数
-    :return: x坐标列表, y坐标列表
+    Generate a 2D random walk trajectory
+    :param steps: Number of steps in the random walk
+    :return: Tuple of x and y coordinates
     """
-    x = [0]
-    y = [0]
-    
-    for _ in range(steps):
-        direction = np.random.choice([(-1, -1), (-1, 1), (1, -1), (1, 1)])
-        x.append(x[-1] + direction[0])
-        y.append(y[-1] + direction[1])
-    
-    return x, y
+    x_step = np.random.choice([-1, 1], steps)
+    y_step = np.random.choice([-1, 1], steps)
+    return x_step.cumsum(), y_step.cumsum()
 
-def plot_single_walk(x, y):
+def plot_single_walk(path):
     """
-    绘制单轨迹图
+    Plot a single random walk trajectory
+    :param path: Tuple of x and y coordinates
     """
+    x_coords, y_coords = path
+    
     plt.figure(figsize=(8, 8))
-    plt.plot(x, y, marker='o', markersize=4, linestyle='-', color='b', label='Random Walk')
-    plt.scatter(x[0], y[0], color='g', s=100, label='Start')  # 起点
-    plt.scatter(x[-1], y[-1], color='r', s=100, label='End')  # 终点
-    plt.legend()
-    plt.title('2D Random Walk (1000 Steps)')
+    plt.plot(x_coords, y_coords, marker='.', markersize=4, linestyle='-', color='b', label='Random Walk')
+    plt.scatter(x_coords[0], y_coords[0], color='green', s=100, label='Start')  # Start point
+    plt.scatter(x_coords[-1], y_coords[-1], color='red', s=100, label='End')   # End point
+    plt.title('Single Random Walk Trajectory (1000 Steps)')
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.axis('equal')
+    plt.legend()
     plt.grid(True)
     plt.show()
 
-def plot_multiple_walks(num_walks, steps):
+def plot_multiple_walks():
     """
-    绘制多轨迹图
+    Plot four different random walk trajectories
     """
-    fig, axs = plt.subplots(2, 2, figsize=(12, 12))
-    fig.suptitle('Multiple 2D Random Walks (1000 Steps)', fontsize=16)
+    fig, axes = plt.subplots(2, 2, figsize=(12, 12))
+    axes = axes.ravel()
     
-    for i in range(num_walks):
-        x, y = random_walk(steps)
-        ax = axs[i // 2, i % 2]
-        ax.plot(x, y, marker='o', markersize=4, linestyle='-', color='b')
-        ax.scatter(x[0], y[0], color='g', s=100)
-        ax.scatter(x[-1], y[-1], color='r', s=100)
-        ax.set_title(f'Walk {i + 1}')
-        ax.set_xlabel('X')
-        ax.set_ylabel('Y')
-        ax.axis('equal')
-        ax.grid(True)
+    for i in range(4):
+        path = random_walk_2d(1000)
+        x_coords, y_coords = path
+        
+        axes[i].plot(x_coords, y_coords, marker='.', markersize=4, linestyle='-', color='b')
+        axes[i].scatter(x_coords[0], y_coords[0], color='green', s=100)  # Start point
+        axes[i].scatter(x_coords[-1], y_coords[-1], color='red', s=100)  # End point
+        axes[i].set_title(f'Trajectory {i + 1}')
+        axes[i].set_xlabel('X')
+        axes[i].set_ylabel('Y')
+        axes[i].axis('equal')
+        axes[i].grid(True)
     
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.tight_layout()
     plt.show()
 
 if __name__ == "__main__":
-    # 单轨迹模拟
-    x, y = random_walk(1000)
-    plot_single_walk(x, y)
+    # Task 1: Single random walk trajectory
+    path = random_walk_2d(1000)
+    plot_single_walk(path)
     
-    # 多轨迹对比
-    plot_multiple_walks(4, 1000)
+    # Task 2: Four different random walk trajectories
+    plot_multiple_walks()
