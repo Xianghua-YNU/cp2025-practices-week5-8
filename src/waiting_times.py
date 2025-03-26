@@ -15,7 +15,7 @@ def generate_coin_sequence(n_flips, p_head=0.08):
     """
     # 待实现: 使用np.random.choice生成随机序列
     pass
-
+    return np.random.choice([0, 1], size=n_flips, p=[1-p_head, p_head])
 def calculate_waiting_times(coin_sequence):
     """计算两次正面之间的等待时间（反面次数）
     
