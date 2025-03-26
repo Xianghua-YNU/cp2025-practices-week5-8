@@ -73,7 +73,7 @@ if __name__ == "__main__":
     compare_simulation_theory()
     
     plt.show()
-    import numpy as np
+import numpy as np
 import matplotlib.pyplot as plt
 from scipy.special import factorial
 
