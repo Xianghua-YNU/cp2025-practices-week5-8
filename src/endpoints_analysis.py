@@ -58,7 +58,7 @@ def plot_endpoints_distribution(endpoints):
     plt.axis('equal')     #确保两轴比例相同
     plt.title('Endpoint Distribution Scatter Plot')    #设置图表标题
     plt.xlabel('X')
-    plt.ylabel('Y')    #设置坐标轴标签
+    plt.ylabel('Y')     #设置坐标轴标签
 
 def analyze_x_distribution(endpoints):
     """分析二维随机游走终点x坐标的统计特性
